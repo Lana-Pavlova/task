@@ -63,16 +63,60 @@ namespace task
 
         private void DisplayAgents()
         {
-            var agentData = _agents.Select(agent => new
+            using (var db = new PracticeContext())
             {
-                TypeName = $"{agent.AgentType?.Title ?? "Не указано"} | {agent.Title}",
-                Director = $"Директор: {agent.DirectorName}",
-                Phone = $"Телефон: {agent.Phone}",
-                Priority = $"Приоритет: {agent.Priority}",
-                Discount = $"{CalculateDiscount(agent)}%"
-            }).ToList();
+                _agents = db.Agents.Include(a => a.AgentType).ToList(); // Обновляем список агентов из базы данных
 
-            AgentsItemsControl.ItemsSource = agentData;
+                var agentData = _agents.Select(agent => new
+                {
+                    TypeName = $"{agent.AgentType?.Title ?? "Не указано"} | {agent.Title}",
+                    Director = $"Директор: {agent.DirectorName}",
+                    Phone = $"Телефон: {agent.Phone}",
+                    Priority = $"Приоритет: {agent.Priority}",
+                    Discount = $"{CalculateDiscount(agent)}%"
+                }).ToList();
+
+                AgentsListBox.ItemsSource = agentData;
+            }
+        }
+
+        private void AddPartnerButton_Click(object sender, RoutedEventArgs e)
+        {
+            using (var db = new PracticeContext())
+            {
+                PartnerEditWindow editWindow = new PartnerEditWindow(db);
+                bool? result = editWindow.ShowDialog();
+                if (result == true)
+                {
+                    DisplayAgents(); // Обновляем список партнеров после добавления
+                }
+            }
+        }
+
+        private void AgentsListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            // Получаем выбранный элемент из ListBox
+            var selectedItem = AgentsListBox.SelectedItem;
+
+            if (selectedItem != null)
+            {
+                // Получаем объект Agent, соответствующий выбранному элементу
+                var agentData = (dynamic)selectedItem;
+                var agent = _agents.FirstOrDefault(a => $"{a.AgentType?.Title ?? "Не указано"} | {a.Title}" == agentData.TypeName);
+
+                if (agent != null)
+                {
+                    using (var db = new PracticeContext())
+                    {
+                        PartnerEditWindow editWindow = new PartnerEditWindow(db, agent);
+                        bool? result = editWindow.ShowDialog();
+                        if (result == true)
+                        {
+                            DisplayAgents(); // Обновляем список партнеров после редактирования
+                        }
+                    }
+                }
+            }
         }
     }
 }

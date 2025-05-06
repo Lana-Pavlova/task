@@ -5,10 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:task"
         mc:Ignorable="d"
-        Title="Список агентов" Height="450" Width="800">
+       Title="Список агентов" Height="450" Width="800">
     <Grid>
-        <ItemsControl x:Name="AgentsItemsControl">
-            <ItemsControl.ItemTemplate>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Button Content="Добавить партнера" Click="AddPartnerButton_Click" Margin="5"/>
+
+        <ListBox x:Name="AgentsListBox" Grid.Row="1" MouseDoubleClick="AgentsListBox_MouseDoubleClick">
+            <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Border BorderBrush="Black" BorderThickness="1" Margin="5" Padding="10">
                         <Grid>
@@ -28,12 +35,7 @@
                         </Grid>
                     </Border>
                 </DataTemplate>
-            </ItemsControl.ItemTemplate>
-            <ItemsControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel />
-                </ItemsPanelTemplate>
-            </ItemsControl.ItemsPanel>
-        </ItemsControl>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </Grid>
 </Window>
