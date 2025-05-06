@@ -5,12 +5,35 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:task"
         mc:Ignorable="d"
-        Title="Список партнеров" Height="450" Width="800">
+        Title="Список агентов" Height="450" Width="800">
     <Grid>
-        <ScrollViewer>
-            <StackPanel x:Name="PartnersPanel">
-                <!-- Партнеры будут добавляться сюда программно -->
-            </StackPanel>
-        </ScrollViewer>
+        <ItemsControl x:Name="AgentsItemsControl">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Border BorderBrush="Black" BorderThickness="1" Margin="5" Padding="10">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel>
+                                <TextBlock FontWeight="Bold" Text="{Binding TypeName}" />
+                                <TextBlock Text="{Binding Director}" />
+                                <TextBlock Text="{Binding Phone}" />
+                                <TextBlock Text="{Binding Priority}" />
+                            </StackPanel>
+
+                            <TextBlock Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="5" FontSize="16" Text="{Binding Discount}" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
     </Grid>
 </Window>

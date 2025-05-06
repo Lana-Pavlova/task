@@ -17,16 +17,12 @@ namespace task
     /// </summary>
     public partial class MainWindow : Window
     {
-        private List<Agent> _agents = new List<Agent>(); // Теперь работаем с сущностями Agent
+        private List<Agent> _agents = new List<Agent>();
 
         public MainWindow()
         {
             InitializeComponent();
-
-            // Загрузка данных из базы данных (замените на ваш код)
             LoadAgentsFromDatabase();
-
-            // Отображение агентов в UI
             DisplayAgents();
         }
 
@@ -34,8 +30,7 @@ namespace task
         {
             using (var db = new PracticeContext())
             {
-                // Загружаем агентов и связанные данные (ProductsSold)
-                _agents = db.Agents.Include(a => a.AgentType).ToList();  // Жадная загрузка для AgentType
+                _agents = db.Agents.Include(a => a.AgentType).ToList();
             }
         }
 
@@ -43,7 +38,6 @@ namespace task
         {
             using (var db = new PracticeContext())
             {
-                // Рассчитываем общее количество проданных продуктов для агента
                 int totalProductsSold = db.Productsales
                     .Where(ps => ps.AgentId == agent.Id)
                     .Sum(ps => ps.ProductCount);
@@ -69,60 +63,16 @@ namespace task
 
         private void DisplayAgents()
         {
-            foreach (var agent in _agents)
+            var agentData = _agents.Select(agent => new
             {
-                // Рассчитываем скидку для каждого агента
-                decimal discount = CalculateDiscount(agent);
+                TypeName = $"{agent.AgentType?.Title ?? "Не указано"} | {agent.Title}",
+                Director = $"Директор: {agent.DirectorName}",
+                Phone = $"Телефон: {agent.Phone}",
+                Priority = $"Приоритет: {agent.Priority}",
+                Discount = $"{CalculateDiscount(agent)}%"
+            }).ToList();
 
-                // Создаем Border для каждого агента
-                Border border = new Border
-                {
-                    BorderBrush = Brushes.Black,
-                    BorderThickness = new Thickness(1),
-                    Margin = new Thickness(5),
-                    Padding = new Thickness(10)
-                };
-
-                // Создаем Grid для колоночного размещения данных и скидки
-                Grid grid = new Grid();
-                grid.ColumnDefinitions.Add(new ColumnDefinition());
-                grid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Auto) }); // Для скидки
-
-                // Создаем StackPanel для текстовых полей
-                StackPanel stackPanel = new StackPanel();
-
-                // Добавляем текстовые поля
-                TextBlock typeNameBlock = new TextBlock { Text = $"{agent.AgentType?.Title ?? "Не указано"} | {agent.Title}", FontWeight = FontWeights.Bold }; // Используем AgentType
-                TextBlock directorBlock = new TextBlock { Text = $"Директор: {agent.DirectorName}" };
-                TextBlock phoneBlock = new TextBlock { Text = $"Телефон: {agent.Phone}" };
-                TextBlock priorityBlock = new TextBlock { Text = $"Приоритет: {agent.Priority}" }; // Вместо Rating
-
-                stackPanel.Children.Add(typeNameBlock);
-                stackPanel.Children.Add(directorBlock);
-                stackPanel.Children.Add(phoneBlock);
-                stackPanel.Children.Add(priorityBlock);
-
-                // Создаем TextBlock для скидки
-                TextBlock discountBlock = new TextBlock
-                {
-                    Text = $"{discount}%",
-                    VerticalAlignment = VerticalAlignment.Top,
-                    HorizontalAlignment = HorizontalAlignment.Right,
-                    Margin = new Thickness(5),
-                    FontSize = 16
-                };
-                Grid.SetColumn(discountBlock, 1);
-
-                // Добавляем StackPanel и TextBlock в Grid
-                grid.Children.Add(stackPanel);
-                grid.Children.Add(discountBlock);
-
-                // Добавляем Grid в Border
-                border.Child = grid;
-
-                // Добавляем Border в StackPanel (главный контейнер)
-                PartnersPanel.Children.Add(border);
-            }
+            AgentsItemsControl.ItemsSource = agentData;
         }
     }
 }
