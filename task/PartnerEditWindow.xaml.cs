@@ -109,10 +109,6 @@ namespace task
             {
                 MessageBox.Show($"Ошибка при сохранении данных: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            finally
-            {
-                Close();
-            }
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)

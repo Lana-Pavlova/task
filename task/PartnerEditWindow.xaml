@@ -5,8 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:task"
         mc:Ignorable="d"
-        Title="Добавление/Редактирование партнера" Height="450" Width="600">
-    <Grid>
+        Title="Добавление/Редактирование партнера" Height="450" Width="600"
+        Background="#FFFFFF"  
+        FontFamily="Segoe UI"
+        Icon="/Res/master.ico">
+    <Grid Background="#F4E8D3">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition Width="*"/>
@@ -24,29 +27,29 @@
         </Grid.RowDefinitions>
 
         <Label Grid.Row="0" Grid.Column="0" Content="Наименование:"/>
-        <TextBox Grid.Row="0" Grid.Column="1" x:Name="TitleTextBox"/>
+        <TextBox Grid.Row="0" Grid.Column="1" x:Name="TitleTextBox" Margin="0,0,10,0"/>
 
         <Label Grid.Row="1" Grid.Column="0" Content="Тип партнера:"/>
-        <ComboBox Grid.Row="1" Grid.Column="1" x:Name="AgentTypeComboBox" DisplayMemberPath="Title"/>
+        <ComboBox Grid.Row="1" Grid.Column="1" x:Name="AgentTypeComboBox" DisplayMemberPath="Title" Margin="0,0,10,0"/>
 
         <Label Grid.Row="2" Grid.Column="0" Content="Рейтинг:"/>
-        <TextBox Grid.Row="2" Grid.Column="1" x:Name="PriorityTextBox"/>
+        <TextBox Grid.Row="2" Grid.Column="1" x:Name="PriorityTextBox" Margin="0,0,10,0"/>
 
         <Label Grid.Row="3" Grid.Column="0" Content="Адрес:"/>
-        <TextBox Grid.Row="3" Grid.Column="1" x:Name="AddressTextBox"/>
+        <TextBox Grid.Row="3" Grid.Column="1" x:Name="AddressTextBox" Margin="0,0,10,0"/>
 
         <Label Grid.Row="4" Grid.Column="0" Content="ФИО директора:"/>
-        <TextBox Grid.Row="4" Grid.Column="1" x:Name="DirectorNameTextBox"/>
+        <TextBox Grid.Row="4" Grid.Column="1" x:Name="DirectorNameTextBox" Margin="0,0,10,0"/>
 
         <Label Grid.Row="5" Grid.Column="0" Content="Телефон:"/>
-        <TextBox Grid.Row="5" Grid.Column="1" x:Name="PhoneTextBox"/>
+        <TextBox Grid.Row="5" Grid.Column="1" x:Name="PhoneTextBox" Margin="0,0,10,0"/>
 
         <Label Grid.Row="6" Grid.Column="0" Content="Email:"/>
-        <TextBox Grid.Row="6" Grid.Column="1" x:Name="EmailTextBox"/>
+        <TextBox Grid.Row="6" Grid.Column="1" x:Name="EmailTextBox" Margin="0,0,10,0"/>
 
-        <StackPanel Grid.Row="7" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-            <Button Content="Сохранить" Click="SaveButton_Click" Margin="0,0,10,0"/>
-            <Button Content="Отмена" Click="CancelButton_Click"/>
+        <StackPanel Grid.Row="7" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Left" Margin="349,0,0,197" Grid.RowSpan="2" Width="140" Height="20" VerticalAlignment="Bottom">
+            <Button Content="Сохранить" Click="SaveButton_Click" Background="#67BA80" Foreground="White" Height="20" Width="62"/>
+            <Button Content="Отмена" Click="CancelButton_Click" Background="#67BA80" Foreground="White" Margin="10,0,0,0"/>
         </StackPanel>
     </Grid>
 </Window>

@@ -5,33 +5,39 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:task"
         mc:Ignorable="d"
-       Title="Список агентов" Height="450" Width="800">
-    <Grid>
+        Title="Список агентов" Height="450" Width="800"
+        Background="#FFFFFF"  
+    FontFamily="Segoe UI"
+    Icon="/Res/Мастер пол.png">
+    <Grid Background="#F4E8D3">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Button Content="Добавить партнера" Click="AddPartnerButton_Click" Margin="5"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="5">
+            <Image Width="50" Height="50" Stretch="Uniform" Margin="0,0,5,0" Source="/Res/master.ico"/>
+            <Button Content="Добавить партнера" Click="AddPartnerButton_Click" Background="#67BA80" FontWeight="Bold" Foreground="White" FontFamily="Segoe UI"/>
+        </StackPanel>
 
-        <ListBox x:Name="AgentsListBox" Grid.Row="1" MouseDoubleClick="AgentsListBox_MouseDoubleClick">
+        <ListBox x:Name="AgentsListBox" Grid.Row="1" MouseDoubleClick="AgentsListBox_MouseDoubleClick" Margin="15,10,15,15">
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Border BorderBrush="Black" BorderThickness="1" Margin="5" Padding="10">
-                        <Grid>
+                        <Grid Width="600">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <StackPanel>
-                                <TextBlock FontWeight="Bold" Text="{Binding TypeName}" />
-                                <TextBlock Text="{Binding Director}" />
-                                <TextBlock Text="{Binding Phone}" />
-                                <TextBlock Text="{Binding Priority}" />
+                            <StackPanel Margin="10,0,10,0" Width="600" Height="70">
+                                <TextBlock FontWeight="Bold" Text="{Binding TypeName}" FontFamily="Segoe UI"/>
+                                <TextBlock Text="{Binding Director}" FontFamily="Segoe UI"/>
+                                <TextBlock Text="{Binding Phone}" FontFamily="Segoe UI"/>
+                                <TextBlock Text="{Binding Priority}" FontFamily="Segoe UI"/>
                             </StackPanel>
 
-                            <TextBlock Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="5" FontSize="16" Text="{Binding Discount}" />
+                            <TextBlock Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="5,5,15,5" FontSize="16" Text="{Binding Discount}" FontFamily="Segoe UI"/>
                         </Grid>
                     </Border>
                 </DataTemplate>
