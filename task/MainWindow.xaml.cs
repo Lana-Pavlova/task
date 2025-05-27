@@ -54,7 +54,7 @@ namespace task
         {
             using (var db = new PracticeContext())
             {
-                _agents = db.Agents.Include(a => a.AgentType).ToList(); // Обновляем список агентов из базы данных
+                _agents = db.Agents.Include(a => a.AgentType).ToList();
 
                 var agentData = _agents.Select(agent => new
                 {
@@ -62,7 +62,7 @@ namespace task
                     Director = $"Директор: {agent.DirectorName}",
                     Phone = $"Телефон: {agent.Phone}",
                     Priority = $"Приоритет: {agent.Priority}",
-                    OrderCost = $"{CalculateOrderCost(agent):C}" // Format as currency
+                    OrderCost = $"{CalculateOrderCost(agent):C}" 
                 }).ToList();
 
                 AgentsListBox.ItemsSource = agentData;
@@ -78,19 +78,17 @@ namespace task
                 bool? result = editWindow.ShowDialog();
                 if (result == true)
                 {
-                    DisplayAgents(); // Обновляем список партнеров после добавления
+                    DisplayAgents(); 
                 }
             }
         }
 
         private void AgentsListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            // Получаем выбранный элемент из ListBox
             var selectedItem = AgentsListBox.SelectedItem;
 
             if (selectedItem != null)
             {
-                // Получаем объект Agent, соответствующий выбранному элементу
                 var agentData = (dynamic)selectedItem;
                 var agent = _agents.FirstOrDefault(a => $"{a.AgentType?.Title ?? "Не указано"} | {a.Title}" == agentData.TypeName);
 
@@ -98,11 +96,21 @@ namespace task
                 {
                     using (var db = new PracticeContext())
                     {
-                        PartnerEditWindow editWindow = new PartnerEditWindow(db, agent);
-                        bool? result = editWindow.ShowDialog();
-                        if (result == true)
+                        var sales = db.Productsales.Where(s => s.AgentId == agent.Id).ToList();
+
+                        if (sales.Count > 0)
                         {
-                            DisplayAgents(); // Обновляем список партнеров после редактирования
+
+                            PartnerEditWindow partnerEditWindow = new PartnerEditWindow(db, sales.First());
+                            bool? result = partnerEditWindow.ShowDialog();
+                            if (result == true)
+                            {
+                                DisplayAgents(); 
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("У данного агента нет заявок.");
                         }
                     }
                 }

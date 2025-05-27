@@ -20,90 +20,98 @@ namespace task
     public partial class PartnerEditWindow : Window
     {
         private PracticeContext _dbContext;
-        private Agent _agent;
-        private bool _isNewAgent;
+        private Productsale _sale;  
+        private bool _isNewSale;
 
-        public PartnerEditWindow(PracticeContext dbContext, Agent agent = null)
+        public PartnerEditWindow(PracticeContext dbContext, Productsale sale = null)
         {
             InitializeComponent();
             _dbContext = dbContext;
+            LoadAgentsAndProducts();  
 
-            // Загрузка типов агентов в ComboBox
-            AgentTypeComboBox.ItemsSource = _dbContext.Agenttypes.ToList();
-            AgentTypeComboBox.DisplayMemberPath = "Title";
 
-            if (agent == null)
+            if (sale == null)
             {
-                // Добавление нового партнера
-                _isNewAgent = true;
-                _agent = new Agent();
+                _isNewSale = true;
+                _sale = new Productsale(); 
             }
             else
             {
-                // Редактирование существующего партнера
-                _isNewAgent = false;
-                _agent = agent;
-                LoadAgentData();
+                _isNewSale = false;
+                _sale = sale;
+                LoadSaleData();
             }
         }
 
-        private void LoadAgentData()
+        private void LoadAgentsAndProducts()
         {
-            TitleTextBox.Text = _agent.Title;
-            AgentTypeComboBox.SelectedItem = _agent.AgentType;
-            PriorityTextBox.Text = _agent.Priority.ToString();
-            AddressTextBox.Text = _agent.Address;
-            DirectorNameTextBox.Text = _agent.DirectorName;
-            PhoneTextBox.Text = _agent.Phone;
-            EmailTextBox.Text = _agent.Email;
+            AgentComboBox.ItemsSource = _dbContext.Agents.ToList();
+            AgentComboBox.DisplayMemberPath = "Title";
+
+            ProductComboBox.ItemsSource = _dbContext.Products.ToList();
+            ProductComboBox.DisplayMemberPath = "Title";
+        }
+        private void LoadSaleData()
+        {
+            var agent = _dbContext.Agents.Find(_sale.AgentId);
+            var product = _dbContext.Products.Find(_sale.ProductId);
+
+            AgentComboBox.SelectedItem = _dbContext.Agents.FirstOrDefault(a => a.Id == _sale.AgentId);
+            ProductComboBox.SelectedItem = _dbContext.Products.FirstOrDefault(p => p.Id == _sale.ProductId);
+
+            QuantityTextBox.Text = _sale.ProductCount.ToString();
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            // Валидация ввода
-            if (string.IsNullOrEmpty(TitleTextBox.Text))
+            if (AgentComboBox.SelectedItem == null)
             {
-                MessageBox.Show("Пожалуйста, введите наименование партнера.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Пожалуйста, выберите агента.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            if (AgentTypeComboBox.SelectedItem == null)
+            if (ProductComboBox.SelectedItem == null)
             {
-                MessageBox.Show("Пожалуйста, выберите тип партнера.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Пожалуйста, выберите продукт.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            if (!int.TryParse(PriorityTextBox.Text, out int priority) || priority < 0)
+            if (string.IsNullOrEmpty(QuantityTextBox.Text))
             {
-                MessageBox.Show("Пожалуйста, введите корректный неотрицательный рейтинг.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Пожалуйста, введите количество.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            // Заполнение данных агента из формы
-            _agent.Title = TitleTextBox.Text;
-            _agent.AgentType = (Agenttype)AgentTypeComboBox.SelectedItem;
-            _agent.AgentTypeId = ((Agenttype)AgentTypeComboBox.SelectedItem).Id;
-            _agent.Priority = priority;
-            _agent.Address = AddressTextBox.Text;
-            _agent.DirectorName = DirectorNameTextBox.Text;
-            _agent.Phone = PhoneTextBox.Text;
-            _agent.Email = EmailTextBox.Text;
+            if (!int.TryParse(QuantityTextBox.Text, out int quantity))
+            {
+                MessageBox.Show("Пожалуйста, введите целое число в поле 'Количество'.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (quantity <= 0)
+            {
+                MessageBox.Show("Пожалуйста, введите положительное число в поле 'Количество'.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            _sale.AgentId = ((Agent)AgentComboBox.SelectedItem).Id;  
+            _sale.ProductId = ((Product)ProductComboBox.SelectedItem).Id; 
+            _sale.ProductCount = quantity;
+
 
             try
             {
-                if (_isNewAgent)
+                if (_isNewSale)
                 {
-                    // Добавление нового агента в базу данных
-                    _dbContext.Agents.Add(_agent);
+                    _dbContext.Productsales.Add(_sale);
                 }
                 else
                 {
-                    // Обновление существующего агента
-                    _dbContext.Agents.Update(_agent);
+                    _dbContext.Productsales.Update(_sale);
                 }
 
                 _dbContext.SaveChanges();
-                DialogResult = true; // Закрываем окно с результатом OK
+                DialogResult = true; 
             }
             catch (Exception ex)
             {
@@ -111,9 +119,10 @@ namespace task
             }
         }
 
+
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = false; // Закрываем окно с результатом Cancel
+            DialogResult = false; 
             Close();
         }
     }
