@@ -59,7 +59,6 @@ namespace task
                 var agentData = _agents.Select(agent => new
                 {
                     TypeName = $"{agent.AgentType?.Title ?? "Не указано"} | {agent.Title}",
-                    Director = $"Директор: {agent.DirectorName}",
                     Phone = $"Телефон: {agent.Phone}",
                     Priority = $"Приоритет: {agent.Priority}",
                     OrderCost = $"{CalculateOrderCost(agent):C}" 

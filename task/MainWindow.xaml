@@ -32,7 +32,7 @@
 
                             <StackPanel Margin="10,0,10,0" Width="600" Height="70">
                                 <TextBlock FontWeight="Bold" Text="{Binding TypeName}" FontFamily="Segoe UI"/>
-                                <TextBlock Text="{Binding Director}" FontFamily="Segoe UI"/>
+                                <TextBlock Text="Директор" FontFamily="Segoe UI"/>
                                 <TextBlock Text="{Binding Phone}" FontFamily="Segoe UI"/>
                                 <TextBlock Text="{Binding Priority}" FontFamily="Segoe UI"/>
                             </StackPanel>
