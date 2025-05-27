@@ -34,30 +34,19 @@ namespace task
             }
         }
 
-        private decimal CalculateDiscount(Agent agent)
+        private decimal CalculateOrderCost(Agent agent)
         {
             using (var db = new PracticeContext())
             {
-                int totalProductsSold = db.Productsales
+                decimal totalCost = db.Productsales
                     .Where(ps => ps.AgentId == agent.Id)
-                    .Sum(ps => ps.ProductCount);
+                    .Join(db.Products,
+                          ps => ps.ProductId,
+                          p => p.Id,
+                          (ps, p) => new { ps, p })
+                    .Sum(x => (decimal)(x.ps.ProductCount * x.p.MinCostForAgent));
 
-                if (totalProductsSold < 10000)
-                {
-                    return 0;
-                }
-                else if (totalProductsSold >= 10000 && totalProductsSold < 50000)
-                {
-                    return 5;
-                }
-                else if (totalProductsSold >= 50000 && totalProductsSold < 300000)
-                {
-                    return 10;
-                }
-                else
-                {
-                    return 15;
-                }
+                return totalCost;
             }
         }
 
@@ -73,12 +62,13 @@ namespace task
                     Director = $"Директор: {agent.DirectorName}",
                     Phone = $"Телефон: {agent.Phone}",
                     Priority = $"Приоритет: {agent.Priority}",
-                    Discount = $"{CalculateDiscount(agent)}%"
+                    OrderCost = $"{CalculateOrderCost(agent):C}" // Format as currency
                 }).ToList();
 
                 AgentsListBox.ItemsSource = agentData;
             }
         }
+
 
         private void AddPartnerButton_Click(object sender, RoutedEventArgs e)
         {

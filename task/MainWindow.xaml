@@ -37,7 +37,7 @@
                                 <TextBlock Text="{Binding Priority}" FontFamily="Segoe UI"/>
                             </StackPanel>
 
-                            <TextBlock Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="5,5,15,5" FontSize="16" Text="{Binding Discount}" FontFamily="Segoe UI"/>
+                            <TextBlock Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="5,5,15,5" FontSize="16" Text="{Binding OrderCost}" FontFamily="Segoe UI"/>
                         </Grid>
                     </Border>
                 </DataTemplate>
