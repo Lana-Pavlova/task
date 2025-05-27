@@ -52,9 +52,10 @@ namespace task
 
         private void DisplayAgents()
         {
+            LoadAgentsFromDatabase(); 
+
             using (var db = new PracticeContext())
             {
-                _agents = db.Agents.Include(a => a.AgentType).ToList();
 
                 var agentData = _agents.Select(agent => new
                 {
@@ -116,4 +117,4 @@ namespace task
             }
         }
     }
-}
+} 
